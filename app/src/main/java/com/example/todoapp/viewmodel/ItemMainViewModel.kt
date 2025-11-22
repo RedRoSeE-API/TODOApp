@@ -56,7 +56,6 @@ class ItemMainViewModel(
                 resetAddForm()
             }
             ItemEvent.SaveItem -> {
-                println(state)
                 val title = state.value.title
                 val description = state.value.description
                 val dueDate = state.value.dueDate
@@ -70,12 +69,14 @@ class ItemMainViewModel(
 
                 viewModelScope.launch {
                     itemDao.insertTodo(item)
+                    resetAddForm()
                 }
 
-                resetAddForm()
             }
-            ItemEvent.UpdateItem -> {
-                //TODO
+            is ItemEvent.UpdateItem -> {
+                viewModelScope.launch {
+                    itemDao.updateTodo(event.item)
+                }
             }
             is ItemEvent.SetDescription -> {
                 _state.update {

@@ -12,6 +12,7 @@ import com.example.todoapp.screens.ItemScreen
 import com.example.todoapp.screens.ItemViewScreen
 import com.example.todoapp.dao.ItemDao
 import com.example.todoapp.event.ItemEvent
+import com.example.todoapp.screens.ItemEditScreen
 import com.example.todoapp.shared.ItemState
 
 @Composable
@@ -37,6 +38,22 @@ fun Navigation(
             val item by dao.getItemById(itemId).collectAsState(initial = null)
 
             ItemViewScreen(item = item, navController = navController)
+        }
+
+        composable(
+            route = Screen.ItemEditScreen.route + "/{itemId}",
+            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
+        ) {backStackEntry ->
+            val itemId = backStackEntry.arguments?.getInt("itemId") ?: return@composable
+            val item by dao.getItemById(itemId).collectAsState(initial = null)
+
+            ItemEditScreen(
+                item = item,
+                navController = navController,
+                onSave = { editedTodo ->
+                    onEvent(ItemEvent.UpdateItem(editedTodo))
+                }
+            )
         }
     }
 

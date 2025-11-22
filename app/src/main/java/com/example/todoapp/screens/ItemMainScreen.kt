@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -89,7 +90,7 @@ fun ItemScreen(
                     modifier = Modifier.fillMaxSize()
                 ){
                     Column(
-                        modifier = Modifier.weight(1f).clickable{navController.navigate(Screen.ItemViewScreen.route + "/${item.id}")}
+                        modifier = Modifier.weight(1f).clickable{ navController.navigate(Screen.ItemViewScreen.route + "/${item.id}") }
                     ) {
                         Text(
                             text = item.title,
@@ -110,6 +111,12 @@ fun ItemScreen(
                                 SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(it)
                             } ?: "",
                             fontSize = 12.sp
+                        )
+                    }
+                    IconButton(onClick = { navController.navigate(Screen.ItemEditScreen.route + "/${item.id}") }) {
+                        Icon(
+                            imageVector = Icons.Rounded.Edit,
+                            contentDescription = "Edit TODO"
                         )
                     }
                     IconButton(onClick = {

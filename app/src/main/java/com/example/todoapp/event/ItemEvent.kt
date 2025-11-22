@@ -9,7 +9,7 @@ sealed interface ItemEvent {
 
     object SaveItem: ItemEvent
 
-    object UpdateItem: ItemEvent
+    data class UpdateItem(val item: Item) : ItemEvent
 
     data class SetTitle(val title: String): ItemEvent
     data class SetDescription(val description: String): ItemEvent
