@@ -1,8 +1,11 @@
 package com.example.todoapp.nav
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,7 +25,13 @@ fun Navigation(
     dao: ItemDao
 ) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Screen.ItemScreen.route){
+    NavHost(
+        navController = navController,
+        startDestination = Screen.ItemScreen.route,
+        modifier = Modifier
+            .fillMaxSize()
+            .systemBarsPadding()
+    ){
         composable(route = Screen.ItemScreen.route) {
             ItemScreen(
                 navController = navController,
@@ -42,7 +51,7 @@ fun Navigation(
 
         composable(
             route = Screen.ItemEditScreen.route + "/{itemId}",
-            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
+            arguments = listOf(navArgument("itemId") { type = NavType.IntType }),
         ) {backStackEntry ->
             val itemId = backStackEntry.arguments?.getInt("itemId") ?: return@composable
             val item by dao.getItemById(itemId).collectAsState(initial = null)

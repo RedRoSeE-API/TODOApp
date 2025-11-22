@@ -7,46 +7,48 @@ import com.example.todoapp.entity.Item
 import com.example.todoapp.event.ItemEvent
 import com.example.todoapp.shared.ItemState
 import com.example.todoapp.shared.SortTypes
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class ItemMainViewModel(
     private val itemDao: ItemDao
-): ViewModel() {
+) : ViewModel() {
 
-    private val _sortType = MutableStateFlow(SortTypes.TITLE)
+    private val _state = MutableStateFlow(ItemState())
+    val state: StateFlow<ItemState> = _state.asStateFlow()
 
-    private val _items = _sortType
-        .flatMapLatest { sortType ->
-            when(sortType) {
+    init {
+        loadItems()
+    }
+
+    private fun loadItems() {
+        viewModelScope.launch {
+            itemDao.getItemsByTitle().collect { items ->
+                _state.update { it.copy(items = items) }
+            }
+        }
+    }
+
+    private fun reloadItems() {
+        viewModelScope.launch {
+            val flow = when (_state.value.sortType) {
                 SortTypes.TITLE -> itemDao.getItemsByTitle()
                 SortTypes.CREATED_ON -> itemDao.getItemsByCreatedOn()
                 SortTypes.DUE_DATE -> itemDao.getItemsByDueDate()
             }
+            flow.collect { items ->
+                _state.update { it.copy(items = items) }
+            }
         }
-    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
-
-    private val _state = MutableStateFlow(ItemState())
-    val state = combine(_state, _sortType, _items) {
-        state, sortType, items ->
-        state.copy(
-            items = items,
-            sortType = sortType
-        )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ItemState())
-
+    }
 
     fun onEvent(event: ItemEvent) {
-        when(event){
+        when (event) {
             is ItemEvent.DeleteItem -> {
                 viewModelScope.launch {
                     itemDao.deleteItem(event.item)
@@ -56,22 +58,16 @@ class ItemMainViewModel(
                 resetAddForm()
             }
             ItemEvent.SaveItem -> {
-                val title = state.value.title
-                val description = state.value.description
-                val dueDate = state.value.dueDate
-
                 val item = Item(
-                    title = title,
-                    description = description,
-                    dueDate = dueDate,
+                    title = _state.value.title,
+                    description = _state.value.description,
+                    dueDate = _state.value.dueDate,
                     createdOn = getCurrentDate()
                 )
-
                 viewModelScope.launch {
                     itemDao.insertTodo(item)
                     resetAddForm()
                 }
-
             }
             is ItemEvent.UpdateItem -> {
                 viewModelScope.launch {
@@ -79,40 +75,25 @@ class ItemMainViewModel(
                 }
             }
             is ItemEvent.SetDescription -> {
-                _state.update {
-                    it.copy(
-                        description = event.description
-                    )
-                }
+                _state.update { it.copy(description = event.description) }
             }
             is ItemEvent.SetDueDate -> {
-                _state.update {
-                    it.copy(
-                        dueDate = event.dueDate
-                    )
-                }
+                _state.update { it.copy(dueDate = event.dueDate) }
             }
             is ItemEvent.SetTitle -> {
-                _state.update {
-                    it.copy(
-                        title = event.title
-                    )
-                }
+                _state.update { it.copy(title = event.title) }
             }
             ItemEvent.ShowDialog -> {
-                _state.update {
-                    it.copy(
-                        isAddingItem = true
-                    )
-                }
+                _state.update { it.copy(isAddingItem = true) }
             }
             is ItemEvent.SortItems -> {
-                _sortType.value = event.sortType
+                _state.update { it.copy(sortType = event.sortType) }
+                reloadItems()
             }
         }
     }
 
-    fun resetAddForm(){
+    fun resetAddForm() {
         _state.update {
             it.copy(
                 isAddingItem = false,

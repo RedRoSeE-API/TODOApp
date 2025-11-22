@@ -3,12 +3,7 @@ package com.example.todoapp.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,75 +30,71 @@ fun ItemViewScreen(item: Item?, navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .padding(16.dp)
     ) {
-        Text(
-            text = item.title,
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Card(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = "Description",
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Medium
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = item.description.ifEmpty { "No description" },
-                    fontSize = 16.sp
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
-                Text(
-                    text = "Due Date",
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.outline
-                )
-                Text(
-                    text = item.dueDate?.let {
-                        SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault()).format(it)
-                    } ?: "Not set",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Go back"
                 )
             }
-
-            Column(horizontalAlignment = Alignment.End) {
-                Text(
-                    text = "Created",
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.outline
-                )
-                Text(
-                    text = item.createdOn?.let {
-                        SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(it)
-                    } ?: "Unknown",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
-                )
-            }
-        }
-        IconButton(onClick = { navController.popBackStack() }) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Go back"
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "View TODO",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
             )
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = item.title,
+            onValueChange = { },
+            label = { Text("Title") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            readOnly = true
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedTextField(
+            value = item.description.ifEmpty { "No description" },
+            onValueChange = { },
+            label = { Text("Description") },
+            modifier = Modifier.fillMaxWidth(),
+            minLines = 3,
+            maxLines = 5,
+            readOnly = true
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedTextField(
+            value = item.dueDate?.let {
+                SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault()).format(it)
+            } ?: "Not set",
+            onValueChange = { },
+            label = { Text("Due Date") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            readOnly = true
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(
+            text = "Created: ${item.createdOn?.let {
+                SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(it)
+            } ?: "Unknown"}",
+            fontSize = 12.sp,
+            color = MaterialTheme.colorScheme.outline
+        )
     }
 }
