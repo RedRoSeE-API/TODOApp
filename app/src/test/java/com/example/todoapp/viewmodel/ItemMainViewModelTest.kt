@@ -6,18 +6,17 @@ import com.example.todoapp.shared.SortTypes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.setMain
 import kotlinx.coroutines.test.resetMain
-import org.junit.jupiter.api.Assertions.*
+import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 import java.util.Calendar
 import java.util.Date
 
 class ItemMainViewModelTest {
-
     private lateinit var viewModel: ItemMainViewModel
     private lateinit var fakeDao: FakeItemDao
     private val testDispatcher = StandardTestDispatcher()
@@ -30,6 +29,7 @@ class ItemMainViewModelTest {
         viewModel = ItemMainViewModel(fakeDao)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @AfterEach
     fun tearDown() {
         Dispatchers.resetMain()
@@ -40,7 +40,7 @@ class ItemMainViewModelTest {
     fun setTitleUpdatesStateTitle() {
         viewModel.onEvent(ItemEvent.SetTitle("New Title"))
 
-        assertEquals("New Title", viewModel.state.value.title)
+        Assertions.assertEquals("New Title", viewModel.state.value.title)
     }
 
     @Test
@@ -48,7 +48,7 @@ class ItemMainViewModelTest {
     fun setDescriptionUpdatesStateDescription() {
         viewModel.onEvent(ItemEvent.SetDescription("New Description"))
 
-        assertEquals("New Description", viewModel.state.value.description)
+        Assertions.assertEquals("New Description", viewModel.state.value.description)
     }
 
     @Test
@@ -57,7 +57,7 @@ class ItemMainViewModelTest {
         val date = Date()
         viewModel.onEvent(ItemEvent.SetDueDate(date))
 
-        assertEquals(date, viewModel.state.value.dueDate)
+        Assertions.assertEquals(date, viewModel.state.value.dueDate)
     }
 
     @Test
@@ -65,7 +65,7 @@ class ItemMainViewModelTest {
     fun showDialogSetsIsAddingItemTrue() {
         viewModel.onEvent(ItemEvent.ShowDialog)
 
-        assertTrue(viewModel.state.value.isAddingItem)
+        Assertions.assertTrue(viewModel.state.value.isAddingItem)
     }
 
     @Test
@@ -74,7 +74,7 @@ class ItemMainViewModelTest {
         viewModel.onEvent(ItemEvent.ShowDialog)
         viewModel.onEvent(ItemEvent.HideDialog)
 
-        assertFalse(viewModel.state.value.isAddingItem)
+        Assertions.assertFalse(viewModel.state.value.isAddingItem)
     }
 
     @Test
@@ -86,11 +86,11 @@ class ItemMainViewModelTest {
         viewModel.onEvent(ItemEvent.ShowDialog)
         viewModel.onEvent(ItemEvent.HideDialog)
 
-        assertAll(
-            { assertEquals("", viewModel.state.value.title) },
-            { assertEquals("", viewModel.state.value.description) },
-            { assertNull(viewModel.state.value.dueDate) },
-            { assertFalse(viewModel.state.value.isAddingItem) }
+        Assertions.assertAll(
+            { Assertions.assertEquals("", viewModel.state.value.title) },
+            { Assertions.assertEquals("", viewModel.state.value.description) },
+            { Assertions.assertNull(viewModel.state.value.dueDate) },
+            { Assertions.assertFalse(viewModel.state.value.isAddingItem) },
         )
     }
 
@@ -99,7 +99,7 @@ class ItemMainViewModelTest {
     fun sortItemsUpdatesSortType() {
         viewModel.onEvent(ItemEvent.SortItems(SortTypes.DUE_DATE))
 
-        assertEquals(SortTypes.DUE_DATE, viewModel.state.value.sortType)
+        Assertions.assertEquals(SortTypes.DUE_DATE, viewModel.state.value.sortType)
     }
 
     @Test
@@ -109,11 +109,11 @@ class ItemMainViewModelTest {
         val calendar = Calendar.getInstance()
         calendar.time = date
 
-        assertAll(
-            { assertEquals(0, calendar.get(Calendar.HOUR_OF_DAY)) },
-            { assertEquals(0, calendar.get(Calendar.MINUTE)) },
-            { assertEquals(0, calendar.get(Calendar.SECOND)) },
-            { assertEquals(0, calendar.get(Calendar.MILLISECOND)) }
+        Assertions.assertAll(
+            { Assertions.assertEquals(0, calendar.get(Calendar.HOUR_OF_DAY)) },
+            { Assertions.assertEquals(0, calendar.get(Calendar.MINUTE)) },
+            { Assertions.assertEquals(0, calendar.get(Calendar.SECOND)) },
+            { Assertions.assertEquals(0, calendar.get(Calendar.MILLISECOND)) },
         )
     }
 
@@ -127,11 +127,11 @@ class ItemMainViewModelTest {
 
         viewModel.resetAddForm()
 
-        assertAll(
-            { assertEquals("", viewModel.state.value.title) },
-            { assertEquals("", viewModel.state.value.description) },
-            { assertNull(viewModel.state.value.dueDate) },
-            { assertFalse(viewModel.state.value.isAddingItem) }
+        Assertions.assertAll(
+            { Assertions.assertEquals("", viewModel.state.value.title) },
+            { Assertions.assertEquals("", viewModel.state.value.description) },
+            { Assertions.assertNull(viewModel.state.value.dueDate) },
+            { Assertions.assertFalse(viewModel.state.value.isAddingItem) },
         )
     }
 }

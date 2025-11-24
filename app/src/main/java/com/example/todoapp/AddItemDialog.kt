@@ -32,54 +32,55 @@ import java.util.Locale
 fun AddItemDialog(
     state: com.example.todoapp.shared.ItemState,
     onEvent: (ItemEvent) -> Unit,
-    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
 
     state.dueDate?.let { calendar.time = it }
 
-    val timePickerDialog = remember {
-        TimePickerDialog(
-            context,
-            { _, hour, minute ->
-                calendar.set(Calendar.HOUR_OF_DAY, hour)
-                calendar.set(Calendar.MINUTE, minute)
-                onEvent(ItemEvent.SetDueDate(calendar.time))
-            },
-            calendar.get(Calendar.HOUR_OF_DAY),
-            calendar.get(Calendar.MINUTE),
-            true
-        )
-    }
+    val timePickerDialog =
+        remember {
+            TimePickerDialog(
+                context,
+                { _, hour, minute ->
+                    calendar.set(Calendar.HOUR_OF_DAY, hour)
+                    calendar.set(Calendar.MINUTE, minute)
+                    onEvent(ItemEvent.SetDueDate(calendar.time))
+                },
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                true,
+            )
+        }
 
-    val datePickerDialog = remember {
-        DatePickerDialog(
-            context,
-            { _, year, month, day ->
-                calendar.set(year, month, day)
-                onEvent(ItemEvent.SetDueDate(calendar.time))
-                timePickerDialog.show()
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        )
-    }
+    val datePickerDialog =
+        remember {
+            DatePickerDialog(
+                context,
+                { _, year, month, day ->
+                    calendar.set(year, month, day)
+                    onEvent(ItemEvent.SetDueDate(calendar.time))
+                    timePickerDialog.show()
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH),
+            )
+        }
 
     Dialog(
-        onDismissRequest = {onEvent(ItemEvent.HideDialog)}
-    ){
+        onDismissRequest = { onEvent(ItemEvent.HideDialog) },
+    ) {
         Card(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
-            shape = RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(16.dp),
         ) {
             OutlinedTextField(
                 value = state.title,
                 onValueChange = { onEvent(ItemEvent.SetTitle(it)) },
                 label = { Text("Title") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -90,30 +91,32 @@ fun AddItemDialog(
                 label = { Text("Description") },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 3,
-                maxLines = 5
+                maxLines = 5,
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             OutlinedButton(
                 onClick = { datePickerDialog.show() },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(
-                    text = state.dueDate?.let {
-                        SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(it)
-                    } ?: "Select due date"
+                    text =
+                        state.dueDate?.let {
+                            SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(it)
+                        } ?: "Select due date",
                 )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
                 horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 TextButton(onClick = { onEvent(ItemEvent.HideDialog) }) {
                     Text("Cancel")
@@ -121,7 +124,7 @@ fun AddItemDialog(
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(
                     onClick = { onEvent(ItemEvent.SaveItem) },
-                    enabled = state.title.isNotBlank()
+                    enabled = state.title.isNotBlank(),
                 ) {
                     Text("Save")
                 }

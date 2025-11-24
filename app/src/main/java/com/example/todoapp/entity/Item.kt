@@ -5,13 +5,11 @@ import androidx.room.PrimaryKey
 import java.util.Date
 
 @Entity
-data class Item (
-
+data class Item(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-
     val title: String,
     val description: String,
     val dueDate: Date? = null,
-    val createdOn: Date? = null
+    val createdOn: Date? = null,
 )

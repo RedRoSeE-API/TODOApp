@@ -16,9 +16,8 @@ import java.util.Calendar
 import java.util.Date
 
 class ItemMainViewModel(
-    private val itemDao: ItemDao
+    private val itemDao: ItemDao,
 ) : ViewModel() {
-
     private val _state = MutableStateFlow(ItemState())
     val state: StateFlow<ItemState> = _state.asStateFlow()
 
@@ -36,11 +35,12 @@ class ItemMainViewModel(
 
     private fun reloadItems() {
         viewModelScope.launch {
-            val flow = when (_state.value.sortType) {
-                SortTypes.TITLE -> itemDao.getItemsByTitle()
-                SortTypes.CREATED_ON -> itemDao.getItemsByCreatedOn()
-                SortTypes.DUE_DATE -> itemDao.getItemsByDueDate()
-            }
+            val flow =
+                when (_state.value.sortType) {
+                    SortTypes.TITLE -> itemDao.getItemsByTitle()
+                    SortTypes.CREATED_ON -> itemDao.getItemsByCreatedOn()
+                    SortTypes.DUE_DATE -> itemDao.getItemsByDueDate()
+                }
             flow.collect { items ->
                 _state.update { it.copy(items = items) }
             }
@@ -58,12 +58,13 @@ class ItemMainViewModel(
                 resetAddForm()
             }
             ItemEvent.SaveItem -> {
-                val item = Item(
-                    title = _state.value.title,
-                    description = _state.value.description,
-                    dueDate = _state.value.dueDate,
-                    createdOn = getCurrentDate()
-                )
+                val item =
+                    Item(
+                        title = _state.value.title,
+                        description = _state.value.description,
+                        dueDate = _state.value.dueDate,
+                        createdOn = getCurrentDate(),
+                    )
                 viewModelScope.launch {
                     itemDao.insertTodo(item)
                     resetAddForm()
@@ -100,7 +101,7 @@ class ItemMainViewModel(
                 title = "",
                 description = "",
                 dueDate = null,
-                createdOn = null
+                createdOn = null,
             )
         }
     }

@@ -38,7 +38,7 @@ import java.util.Locale
 fun ItemScreen(
     navController: NavController,
     state: ItemState,
-    onEvent: (ItemEvent) -> Unit
+    onEvent: (ItemEvent) -> Unit,
 ) {
     Scaffold(
         floatingActionButton = {
@@ -47,36 +47,38 @@ fun ItemScreen(
             }) {
                 Icon(Icons.Default.Add, contentDescription = "Add TODO")
             }
-        }
+        },
     ) { padding ->
-        if(state.isAddingItem){
+        if (state.isAddingItem) {
             AddItemDialog(
                 state = state,
-                onEvent = onEvent
+                onEvent = onEvent,
             )
         }
 
         LazyColumn(
             contentPadding = padding,
             modifier = Modifier.fillMaxSize().padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ){
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
             item {
                 Row(
                     modifier = Modifier.fillMaxSize().horizontalScroll(rememberScrollState()),
-                    verticalAlignment = Alignment.CenterVertically
-                ){
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     SortTypes.entries.forEach { sortType ->
                         Row(
-                            modifier = Modifier.clickable {
-                               onEvent(ItemEvent.SortItems(sortType))
-                            },
-                            verticalAlignment = Alignment.CenterVertically
-                        ){
-                            RadioButton(selected = state.sortType == sortType,
+                            modifier =
+                                Modifier.clickable {
+                                    onEvent(ItemEvent.SortItems(sortType))
+                                },
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            RadioButton(
+                                selected = state.sortType == sortType,
                                 onClick = {
                                     onEvent(ItemEvent.SortItems(sortType))
-                                }
+                                },
                             )
                             Text(text = sortType.name)
                         }
@@ -86,36 +88,48 @@ fun ItemScreen(
 
             items(state.items) { item ->
                 Row(
-                    modifier = Modifier.fillMaxSize()
-                ){
+                    modifier = Modifier.fillMaxSize(),
+                ) {
                     Column(
-                        modifier = Modifier.weight(1f).clickable{ navController.navigate(Screen.ItemViewScreen.route + "/${item.id}") }
+                        modifier =
+                            Modifier.weight(1f).clickable {
+                                navController.navigate(Screen.ItemViewScreen.route + "/${item.id}")
+                            },
                     ) {
                         Text(
                             text = item.title,
-                            fontSize = 20.sp
+                            fontSize = 20.sp,
                         )
                         Text(
-                            text = if (item.description.length > 10) "${item.description.take(10)}..." else item.description,
-                            fontSize = 12.sp
+                            text =
+                                if (item.description.length >
+                                    10
+                                ) {
+                                    "${item.description.take(10)}..."
+                                } else {
+                                    item.description
+                                },
+                            fontSize = 12.sp,
                         )
                         Text(
-                            text = item.dueDate?.let {
-                                SimpleDateFormat("MMM dd, yyyy HH:mm:ss", Locale.getDefault()).format(it)
-                            } ?: "",
-                            fontSize = 12.sp
+                            text =
+                                item.dueDate?.let {
+                                    SimpleDateFormat("MMM dd, yyyy HH:mm:ss", Locale.getDefault()).format(it)
+                                } ?: "",
+                            fontSize = 12.sp,
                         )
                         Text(
-                            text = item.createdOn?.let {
-                                SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(it)
-                            } ?: "",
-                            fontSize = 12.sp
+                            text =
+                                item.createdOn?.let {
+                                    SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(it)
+                                } ?: "",
+                            fontSize = 12.sp,
                         )
                     }
                     IconButton(onClick = { navController.navigate(Screen.ItemEditScreen.route + "/${item.id}") }) {
                         Icon(
                             imageVector = Icons.Rounded.Edit,
-                            contentDescription = "Edit TODO"
+                            contentDescription = "Edit TODO",
                         )
                     }
                     IconButton(onClick = {
@@ -123,7 +137,7 @@ fun ItemScreen(
                     }) {
                         Icon(
                             imageVector = Icons.Default.Delete,
-                            contentDescription = "Delete TODO"
+                            contentDescription = "Delete TODO",
                         )
                     }
                 }

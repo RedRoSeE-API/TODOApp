@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ItemDao {
-
     @Insert(onConflict = OnConflictStrategy.NONE)
     suspend fun insertTodo(item: Item): Long
 

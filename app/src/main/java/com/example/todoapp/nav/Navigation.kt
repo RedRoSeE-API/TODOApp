@@ -11,48 +11,49 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.todoapp.screens.ItemScreen
-import com.example.todoapp.screens.ItemViewScreen
 import com.example.todoapp.dao.ItemDao
 import com.example.todoapp.event.ItemEvent
+import com.example.todoapp.screens.ItemDetailScreen
 import com.example.todoapp.screens.ItemEditScreen
+import com.example.todoapp.screens.ItemScreen
 import com.example.todoapp.shared.ItemState
 
 @Composable
 fun Navigation(
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
-    dao: ItemDao
+    dao: ItemDao,
 ) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
         startDestination = Screen.ItemScreen.route,
-        modifier = Modifier
-            .fillMaxSize()
-            .systemBarsPadding()
-    ){
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .systemBarsPadding(),
+    ) {
         composable(route = Screen.ItemScreen.route) {
             ItemScreen(
                 navController = navController,
                 state = state,
-                onEvent = onEvent
+                onEvent = onEvent,
             )
         }
         composable(
             route = Screen.ItemViewScreen.route + "/{itemId}",
-            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
-        ) {backStackEntry ->
+            arguments = listOf(navArgument("itemId") { type = NavType.IntType }),
+        ) { backStackEntry ->
             val itemId = backStackEntry.arguments?.getInt("itemId") ?: return@composable
             val item by dao.getItemById(itemId).collectAsState(initial = null)
 
-            ItemViewScreen(item = item, navController = navController)
+            ItemDetailScreen(item = item, navController = navController)
         }
 
         composable(
             route = Screen.ItemEditScreen.route + "/{itemId}",
             arguments = listOf(navArgument("itemId") { type = NavType.IntType }),
-        ) {backStackEntry ->
+        ) { backStackEntry ->
             val itemId = backStackEntry.arguments?.getInt("itemId") ?: return@composable
             val item by dao.getItemById(itemId).collectAsState(initial = null)
 
@@ -61,9 +62,8 @@ fun Navigation(
                 navController = navController,
                 onSave = { editedTodo ->
                     onEvent(ItemEvent.UpdateItem(editedTodo))
-                }
+                },
             )
         }
     }
-
 }
