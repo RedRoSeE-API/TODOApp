@@ -1,4 +1,4 @@
-package com.example.todoapp
+package com.example.todoapp.dialog
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -24,13 +24,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.todoapp.event.ItemEvent
+import com.example.todoapp.shared.ItemState
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
 @Composable
 fun AddItemDialog(
-    state: com.example.todoapp.shared.ItemState,
+    state: ItemState,
     onEvent: (ItemEvent) -> Unit,
 ) {
     val context = LocalContext.current

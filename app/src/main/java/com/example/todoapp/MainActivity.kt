@@ -5,11 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -49,18 +45,13 @@ class MainActivity : ComponentActivity() {
         }
         enableEdgeToEdge()
         setContent {
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background,
-            ) {
-                MyApplicationTheme {
-                    val state = viewModel.state.collectAsState()
-                    Navigation(
-                        state = state.value,
-                        onEvent = viewModel::onEvent,
-                        dao = db.dao,
-                    )
-                }
+            MyApplicationTheme(window = window) {
+                val state = viewModel.state.collectAsState()
+                Navigation(
+                    state = state.value,
+                    onEvent = viewModel::onEvent,
+                    dao = db.dao,
+                )
             }
         }
     }

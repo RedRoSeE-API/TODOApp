@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.todoapp.AddItemDialog
+import com.example.todoapp.dialog.AddItemDialog
 import com.example.todoapp.event.ItemEvent
 import com.example.todoapp.nav.Screen
 import com.example.todoapp.shared.ItemState
