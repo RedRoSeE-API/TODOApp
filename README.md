@@ -249,16 +249,19 @@ The project uses ktlint for code formatting:
 ## 📸 Screenshots
 
 ### Main Screen
-*[Add screenshot of main task list]*
+![583233325_848240407600782_6940888960527827242_n](https://github.com/user-attachments/assets/fb80ab12-f8fb-4828-b673-e33883cb5f2f)
+
 
 ### Add Task Dialog
-*[Add screenshot of add task dialog]*
+![588227001_849697817711530_389239827106958109_n](https://github.com/user-attachments/assets/aa552665-7767-4f76-9293-63e42b8a4e3e)
+
 
 ### Task Detail View
-*[Add screenshot of task detail screen]*
+![589250587_1079356120844234_2625900344629958296_n](https://github.com/user-attachments/assets/5f71abad-3294-4412-b98c-d534837b4f74)
+
 
 ### Edit Task Screen
-*[Add screenshot of edit screen]*
+![582970262_823408487346037_2666380572530522761_n](https://github.com/user-attachments/assets/80453cd2-4bb3-4784-96c8-68355e762640)
 
 ### Sorting Options
 *[Add screenshot of sort menu]*
