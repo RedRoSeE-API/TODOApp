@@ -249,19 +249,17 @@ The project uses ktlint for code formatting:
 ## 📸 Screenshots
 
 ### Main Screen
-![583233325_848240407600782_6940888960527827242_n](https://github.com/user-attachments/assets/fb80ab12-f8fb-4828-b673-e33883cb5f2f)
-
+<img src="https://github.com/user-attachments/assets/fb80ab12-f8fb-4828-b673-e33883cb5f2f" width="350"/>
 
 ### Add Task Dialog
-![588227001_849697817711530_389239827106958109_n](https://github.com/user-attachments/assets/aa552665-7767-4f76-9293-63e42b8a4e3e)
-
+<img src="https://github.com/user-attachments/assets/aa552665-7767-4f76-9293-63e42b8a4e3e" width="350"/>
 
 ### Task Detail View
-![589250587_1079356120844234_2625900344629958296_n](https://github.com/user-attachments/assets/5f71abad-3294-4412-b98c-d534837b4f74)
-
+<img src="https://github.com/user-attachments/assets/5f71abad-3294-4412-b98c-d534837b4f74" width="350"/>
 
 ### Edit Task Screen
-![582970262_823408487346037_2666380572530522761_n](https://github.com/user-attachments/assets/80453cd2-4bb3-4784-96c8-68355e762640)
+<img src="https://github.com/user-attachments/assets/80453cd2-4bb3-4784-96c8-68355e762640" width="350"/>
+
 
 ### Sorting Options
 *[Add screenshot of sort menu]*
